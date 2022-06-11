@@ -33,52 +33,55 @@ public class App {
 
             initPageNumberMap();
             initCommandMap();
-            // System.out.println(text);
-
-            // printDescription(text);
-            // printSyntax(text, "CP");
-            // printOpCode(text);
 
             while (true) {
                 System.out.println("Tekan 1 untuk menampilkan Summary Instruksi AVR");
+                System.out.println("Tekan 2 untuk konversi ke Machine Code");
                 System.out.println("Tekan 99 untuk exit.");
                 String in = scanner.nextLine();
-                if (in.equals("1")){
+                if (in.equals("1")) {
                     System.out.print("Instruksi: ");
                     System.out.println(instrMap.get(scanner.nextLine().toUpperCase()));
+                } else if (in.equals("2")){
+                    System.out.print("Instruksi: ");
+                    String masukan = scanner.nextLine().toUpperCase();
+                    System.out.println(instrMap.get(masukan).toMachineCode(masukan));
+                } else {
+                    System.out.println("keluar dari program...");
+                    break;
                 }
             }
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static String extractSyntax(String text, String command){
+    private static String extractSyntax(String text, String command) {
         Pattern pattern = Pattern.compile("\\(i\\)\\s(" + command + "\\s.+?)\\s");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            return ("Syntax: " + matcher.group(1));
+            return (matcher.group(1));
         }
-        return "Syntax not found.";
+        return null;
     }
 
     private static String extractOpCode(String text) {
         Pattern pattern = Pattern.compile("\\w{4}\\s\\w{4}\\s\\w{4}\\s\\w{4}");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            return ("OpCode: " + matcher.group());
+            return (matcher.group());
         }
-        return "OpCode not found.";
+        return null;
     }
 
     private static String extractDescription(String text) {
         Pattern pattern = Pattern.compile("Description\\n+([\\s\\S]+?)Operation:");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            return ("Description: " + matcher.group(1));
+            return (matcher.group(1).replace('\n', ' '));
         }
-        return "Description not found.";
+        return null;
 
     }
 
@@ -87,7 +90,8 @@ public class App {
             pdfStripper.setStartPage(entry.getValue());
             pdfStripper.setEndPage(entry.getValue());
             String text = pdfStripper.getText(pdDocument);
-            instrMap.put(entry.getKey(), new Command(extractDescription(text), extractSyntax(text, entry.getKey()), extractOpCode(text)));
+            instrMap.put(entry.getKey(), new Instruction(extractDescription(text))
+                    .addSyntax(new Syntax0Args(extractSyntax(text, entry.getKey()), extractOpCode(text))));
         }
     }
 
@@ -98,10 +102,9 @@ public class App {
         String text = pdfStripper.getText(pdDocument);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
-            if (matcher.group().contains(" – ")){
+            if (matcher.group().contains(" – ")) {
                 String instr = matcher.group().split(" – ")[0].split("\\.")[1].strip().split("\\s")[0];
                 pageNumberMap.put(instr, Integer.parseInt(matcher.group(1)));
-                // System.out.println(instr + matcher.group(1));
             }
         }
     }
