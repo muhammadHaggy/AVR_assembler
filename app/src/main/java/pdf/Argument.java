@@ -9,7 +9,7 @@ abstract class Argument {
 
     String toMachineCode(String opCode, String value){
         if (value == null){
-            return opCode;
+            return null;
         }
         
         int valueLength = 0;
@@ -48,8 +48,28 @@ abstract class Argument {
             return new Rd();
         } else if (arg.toUpperCase().equals("RR")){
             return new Rr();
+        } else if (arg.toUpperCase().contains("X")){
+            return new X(isPreDecrement(arg), isPostIncrement(arg));
+        } else if (arg.toUpperCase().contains("Y")){
+            return new Y(isPreDecrement(arg), isPostIncrement(arg));
+        } else if (arg.toUpperCase().contains("Z")){
+            return new Z(isPreDecrement(arg), isPostIncrement(arg));
         }
         return null;
+    }
+
+    static boolean isPreDecrement(String arg){
+        if (arg.startsWith("-")){
+            return true;
+        }
+        return false;
+    }
+
+    static boolean isPostIncrement(String arg){
+        if (arg.endsWith("+")){
+            return true;
+        }
+        return false;
     }
 
     abstract String argToOpcode(String arg);
@@ -136,6 +156,15 @@ class RegisterPairArgument extends Argument{
     }
     @Override
     String argToOpcode(String arg) {
+        if (arg.startsWith("-") && preDecrement && arg.charAt(1) == charInOpcode){
+            return "";
+        }
+        if (arg.endsWith("+") && postIncrement && arg.charAt(0) == charInOpcode){
+            return "";
+        }
+        if (arg.charAt(0) == charInOpcode && !preDecrement && !postIncrement){
+            return "";
+        }
         return null;
     }
 
@@ -143,16 +172,16 @@ class RegisterPairArgument extends Argument{
 
 class Z extends RegisterPairArgument{
 
-    public Z(char charInOpcode, boolean preDecrement, boolean postIncrement) {
-        super(charInOpcode, preDecrement, postIncrement);
+    public Z(boolean preDecrement, boolean postIncrement) {
+        super('Z', preDecrement, postIncrement);
     }
     
 }
 
 class Y extends RegisterPairArgument{
 
-    public Y(char charInOpcode, boolean preDecrement, boolean postIncrement) {
-        super(charInOpcode, preDecrement, postIncrement);
+    public Y(boolean preDecrement, boolean postIncrement) {
+        super('Y', preDecrement, postIncrement);
     }
 
 
@@ -161,8 +190,8 @@ class Y extends RegisterPairArgument{
 
 class X extends RegisterPairArgument{
 
-    public X(char charInOpcode, boolean preDecrement, boolean postIncrement) {
-        super(charInOpcode, preDecrement, postIncrement);
+    public X(boolean preDecrement, boolean postIncrement) {
+        super('X', preDecrement, postIncrement);
     }
 
 

@@ -5,7 +5,9 @@ package pdf;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -58,34 +60,54 @@ public class App {
         }
     }
 
-    private static Syntax extractSyntax(String text, String command) {
-        Pattern pattern = Pattern.compile("\\(i\\)\\s(" + command + "\\s.+?)\\s");
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
+    private static ArrayList<Syntax> extractSyntax(String text, String command) {
+        text = text.replace(", ", ",");
+        if (command.equals("LD")){
+            System.out.println(text);
+        }
+        Pattern patternWithArgument = Pattern.compile("\\([i]+[v]?\\)\\s(" + command + "\\s[RdXYZ,r+-kK]*?)\\s+");
+        Pattern patternNoArgument = Pattern.compile("\\([i]+[v]?\\)\\s(" + command + ")\\s+None");
+        ArrayList<Syntax> syntaxList = new ArrayList<Syntax>();
+        ArrayList<String> opCodes = extractOpCode(text);
+        Iterator<String> opCodesIterator = opCodes.iterator();
+        Matcher matcher = patternNoArgument.matcher(text);
+        while (matcher.find() && opCodesIterator.hasNext()) {
             // return (matcher.group(1));
             String syntax = matcher.group(1);
-            String[] args = syntax.split("\s")[1].split(",");
+            syntaxList.add(new Syntax0Args(syntax, opCodesIterator.next()));
+        }
+
+        matcher = patternWithArgument.matcher(text);
+        while (matcher.find() && opCodesIterator.hasNext()) {
+            // return (matcher.group(1));
+            String syntax = matcher.group(1);
+            String[] args = new String[0];
+            try {
+                args = syntax.split("\\s")[1].split(",");
+            } catch (ArrayIndexOutOfBoundsException e) {
+            }
             if (args.length == 1 && args[0].equals("NONE")){
-                return new Syntax0Args(syntax, extractOpCode(text));
+                syntaxList.add(new Syntax0Args(syntax, opCodesIterator.next()));
             }
             if (args.length == 0){
-                return new Syntax0Args(syntax, extractOpCode(text));
+                syntaxList.add(new Syntax0Args(syntax, opCodesIterator.next()));
             } else if (args.length == 1){
-                return new Syntax1Args(syntax, extractOpCode(text), Argument.getArgument(args[0]));
+                syntaxList.add(new Syntax1Args(syntax, opCodesIterator.next(), Argument.getArgument(args[0])));
             } else if (args.length == 2) {
-                return new Syntax2Args(syntax, extractOpCode(text), Argument.getArgument(args[0]), Argument.getArgument(args[1]));
+                syntaxList.add(new Syntax2Args(syntax, opCodesIterator.next(), Argument.getArgument(args[0]), Argument.getArgument(args[1])));
             }
         }
-        return null;
+        return syntaxList;
     }
 
-    private static String extractOpCode(String text) {
+    private static ArrayList<String> extractOpCode(String text) {
         Pattern pattern = Pattern.compile("\\w{4}\\s\\w{4}\\s\\w{4}\\s\\w{4}");
         Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            return (matcher.group());
+        ArrayList<String> opCodes = new ArrayList<String>();
+        while (matcher.find()) {
+            opCodes.add(matcher.group());
         }
-        return null;
+        return opCodes;
     }
 
     private static String extractDescription(String text) {
@@ -103,8 +125,12 @@ public class App {
             pdfStripper.setStartPage(entry.getValue());
             pdfStripper.setEndPage(entry.getValue());
             String text = pdfStripper.getText(pdDocument);
-            instrMap.put(entry.getKey(), new Instruction(extractDescription(text))
-                    .addSyntax(extractSyntax(text, entry.getKey())));
+            var syntaxList = extractSyntax(text, entry.getKey());
+            var newInstr = new Instruction(extractDescription(text));
+            instrMap.put(entry.getKey(), newInstr);
+            for (Syntax syntax : syntaxList) {
+                newInstr.addSyntax(syntax);
+            }
         }
     }
 
