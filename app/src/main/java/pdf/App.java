@@ -62,10 +62,7 @@ public class App {
 
     private static ArrayList<Syntax> extractSyntax(String text, String command) {
         text = text.replace(", ", ",");
-        if (command.equals("LD")){
-            System.out.println(text);
-        }
-        Pattern patternWithArgument = Pattern.compile("\\([i]+[v]?\\)\\s(" + command + "\\s[RdXYZ,r+-kK]*?)\\s+");
+        Pattern patternWithArgument = Pattern.compile("\\([i]+[v]?\\)\\s(" + command + "\\s[RdXYZ,r\\+-kK]*?)\\s+");
         Pattern patternNoArgument = Pattern.compile("\\([i]+[v]?\\)\\s(" + command + ")\\s+None");
         ArrayList<Syntax> syntaxList = new ArrayList<Syntax>();
         ArrayList<String> opCodes = extractOpCode(text);
@@ -101,7 +98,8 @@ public class App {
     }
 
     private static ArrayList<String> extractOpCode(String text) {
-        Pattern pattern = Pattern.compile("\\w{4}\\s\\w{4}\\s\\w{4}\\s\\w{4}");
+        String charInOpcode = "[01rdkK]";
+        Pattern pattern = Pattern.compile(charInOpcode + "{4}\\s" + charInOpcode + "{4}\\s" + charInOpcode + "{4}\\s" + charInOpcode + "{4}");
         Matcher matcher = pattern.matcher(text);
         ArrayList<String> opCodes = new ArrayList<String>();
         while (matcher.find()) {

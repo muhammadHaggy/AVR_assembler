@@ -15,6 +15,9 @@ public class Syntax2Args extends Syntax{
             return null;
         }
         String firstOpcode = firstArgument.toMachineCode(opCode, firstArgument.argToOpcode(arg[0]));
+        if (firstOpcode == null){
+            return null;
+        }
         return secondArgument.toMachineCode(firstOpcode, secondArgument.argToOpcode(arg[1]));
     }
 

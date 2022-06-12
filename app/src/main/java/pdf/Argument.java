@@ -59,14 +59,14 @@ abstract class Argument {
     }
 
     static boolean isPreDecrement(String arg){
-        if (arg.startsWith("-")){
+        if (arg.contains("-")){
             return true;
         }
         return false;
     }
 
     static boolean isPostIncrement(String arg){
-        if (arg.endsWith("+")){
+        if (arg.contains("+")){
             return true;
         }
         return false;
@@ -156,16 +156,16 @@ class RegisterPairArgument extends Argument{
     }
     @Override
     String argToOpcode(String arg) {
-        if (arg.startsWith("-") && preDecrement && arg.charAt(1) == charInOpcode){
-            return "";
+        if (!arg.contains(charInOpcode + "")){
+            return null;
         }
-        if (arg.endsWith("+") && postIncrement && arg.charAt(0) == charInOpcode){
-            return "";
+        if (arg.startsWith("-") && !preDecrement){
+            return null;
         }
-        if (arg.charAt(0) == charInOpcode && !preDecrement && !postIncrement){
-            return "";
+        if (arg.endsWith("+") && !postIncrement){
+            return null;
         }
-        return null;
+        return "";
     }
 
 }
