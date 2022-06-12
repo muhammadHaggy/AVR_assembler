@@ -10,8 +10,11 @@ public class Syntax1Args extends Syntax{
 
     @Override
     String toMachineCode(String instr) {
-        String arg = instr.split("\s")[1];
-        return firstArgument.toMachineCode(opCode, firstArgument.argToOpcode(arg));
+        String[] args = instr.split("\s")[1].split(",");
+        if (args.length != 1){
+            return null;
+        }
+        return firstArgument.toMachineCode(opCode, firstArgument.argToOpcode(args[0]));
     }
     
 }

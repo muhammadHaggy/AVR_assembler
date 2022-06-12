@@ -11,6 +11,9 @@ public class Syntax2Args extends Syntax{
     @Override
     String toMachineCode(String instr) {
         String[] arg = instr.split("\s")[1].split(",");
+        if (arg.length != 2){
+            return null;
+        }
         String firstOpcode = firstArgument.toMachineCode(opCode, firstArgument.argToOpcode(arg[0]));
         return secondArgument.toMachineCode(firstOpcode, secondArgument.argToOpcode(arg[1]));
     }

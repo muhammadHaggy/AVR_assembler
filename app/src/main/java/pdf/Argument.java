@@ -8,6 +8,10 @@ abstract class Argument {
     }
 
     String toMachineCode(String opCode, String value){
+        if (value == null){
+            return opCode;
+        }
+        
         int valueLength = 0;
         for (Character character : opCode.toLowerCase().toCharArray()) {
             if (character == charInOpcode){
@@ -62,6 +66,9 @@ class Rd extends Argument{
 
     @Override
     String argToOpcode(String arg) {
+        if (!arg.startsWith("R")){
+            return null;
+        }
         try {
             int registerNumber = Integer.parseInt(arg.substring(1));
             String argOpcode = Integer.toBinaryString(registerNumber);
@@ -86,6 +93,9 @@ class Rr extends Argument{
 
     @Override
     String argToOpcode(String arg) {
+        if (!arg.startsWith("R")){
+            return null;
+        }
         try {
             int registerNumber = Integer.parseInt(arg.substring(1));
             String argOpcode = Integer.toBinaryString(registerNumber);
@@ -126,7 +136,6 @@ class RegisterPairArgument extends Argument{
     }
     @Override
     String argToOpcode(String arg) {
-        // TODO Auto-generated method stub
         return null;
     }
 
