@@ -8,6 +8,18 @@ abstract class Argument {
     }
 
     String toMachineCode(String opCode, String value){
+        int valueLength = 0;
+        for (Character character : opCode.toLowerCase().toCharArray()) {
+            if (character == charInOpcode){
+                valueLength++;
+            }
+        }
+
+        while (value.length() < valueLength) {
+            value = "0" + value;
+        }
+
+
         int valueIndex = 0;
         StringBuffer stringBuffer = new StringBuffer();
         for (Character character : opCode.toLowerCase().toCharArray()) {
@@ -31,6 +43,8 @@ abstract class Argument {
         }
         return null;
     }
+
+    abstract String argToOpcode(String arg);
 }
 
 /**
@@ -40,6 +54,12 @@ class Rd extends Argument{
 
     public Rd() {
         super('d');
+    }
+
+    @Override
+    String argToOpcode(String arg) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     
@@ -53,6 +73,12 @@ class Rr extends Argument{
     public Rr() {
         super('r');
     }
+
+    @Override
+    String argToOpcode(String arg) {
+        // TODO Auto-generated method stub
+        return null;
+    }
     
 }
 
@@ -60,6 +86,16 @@ class K extends Argument{
 
     public K() {
         super('k');
+    }
+
+    @Override
+    String argToOpcode(String arg) {
+        try {
+            return Integer.toBinaryString(Integer.parseInt(arg));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
@@ -71,6 +107,11 @@ class RegisterPairArgument extends Argument{
         super(charInOpcode);
         this.preDecrement = preDecrement;
         this.postIncrement = postIncrement;
+    }
+    @Override
+    String argToOpcode(String arg) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
