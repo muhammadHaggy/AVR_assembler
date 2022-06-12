@@ -73,7 +73,7 @@ public class App {
             } else if (args.length == 1){
                 return new Syntax1Args(syntax, extractOpCode(text), Argument.getArgument(args[0]));
             } else if (args.length == 2) {
-                return new Syntax2Args(syntax, extractOpCode(text));
+                return new Syntax2Args(syntax, extractOpCode(text), Argument.getArgument(args[0]), Argument.getArgument(args[1]));
             }
         }
         return null;
