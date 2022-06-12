@@ -17,4 +17,9 @@ abstract class Syntax {
     }
 
     abstract String toMachineCode(String instr);
+
+    @Override
+    public String toString() {
+        return "Syntax: " + syntax + "\t\t\t" + "Opcode: " + opcode;
+    }
 }

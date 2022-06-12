@@ -48,7 +48,46 @@ class Rr extends Argument{
 class K extends Argument{
 
     public K() {
-        super('K');
+        super('k');
     }
+
+}
+
+
+class RegisterPairArgument extends Argument{
+    boolean preDecrement, postIncrement;
+    public RegisterPairArgument(char charInOpcode, boolean preDecrement, boolean postIncrement) {
+        super(charInOpcode);
+        this.preDecrement = preDecrement;
+        this.postIncrement = postIncrement;
+    }
+
+}
+
+class Z extends RegisterPairArgument{
+
+    public Z(char charInOpcode, boolean preDecrement, boolean postIncrement) {
+        super(charInOpcode, preDecrement, postIncrement);
+    }
+    
+}
+
+class Y extends RegisterPairArgument{
+
+    public Y(char charInOpcode, boolean preDecrement, boolean postIncrement) {
+        super(charInOpcode, preDecrement, postIncrement);
+    }
+
+
+
+}
+
+class X extends RegisterPairArgument{
+
+    public X(char charInOpcode, boolean preDecrement, boolean postIncrement) {
+        super(charInOpcode, preDecrement, postIncrement);
+    }
+
+
 
 }

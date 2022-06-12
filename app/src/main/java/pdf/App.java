@@ -57,11 +57,23 @@ public class App {
         }
     }
 
-    private static String extractSyntax(String text, String command) {
+    private static Syntax extractSyntax(String text, String command) {
         Pattern pattern = Pattern.compile("\\(i\\)\\s(" + command + "\\s.+?)\\s");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            return (matcher.group(1));
+            // return (matcher.group(1));
+            String syntax = matcher.group(1);
+            String[] args = syntax.split("\s")[1].split(",");
+            if (args.length == 1 && args[0].equals("NONE")){
+                return new Syntax0Args(syntax, extractOpCode(text));
+            }
+            if (args.length == 0){
+                return new Syntax0Args(syntax, extractOpCode(text));
+            } else if (args.length == 1){
+                return new Syntax1Args(syntax, extractOpCode(text));
+            } else if (args.length == 2) {
+                return new Syntax2Args(syntax, extractOpCode(text));
+            }
         }
         return null;
     }
@@ -91,7 +103,7 @@ public class App {
             pdfStripper.setEndPage(entry.getValue());
             String text = pdfStripper.getText(pdDocument);
             instrMap.put(entry.getKey(), new Instruction(extractDescription(text))
-                    .addSyntax(new Syntax0Args(extractSyntax(text, entry.getKey()), extractOpCode(text))));
+                    .addSyntax(extractSyntax(text, entry.getKey())));
         }
     }
 

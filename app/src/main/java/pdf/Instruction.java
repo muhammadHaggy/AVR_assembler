@@ -28,4 +28,13 @@ class Instruction {
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        String result = "Description: " + description + "\n";
+        for (Syntax syntax : syntaxList) {
+            result += syntax + "\n";
+        }
+        return result;
+    }
 }
