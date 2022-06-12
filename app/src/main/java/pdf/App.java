@@ -45,7 +45,8 @@ public class App {
                 } else if (in.equals("2")){
                     System.out.print("Instruksi: ");
                     String masukan = scanner.nextLine().toUpperCase();
-                    System.out.println(instrMap.get(masukan).toMachineCode(masukan));
+                    String cmd = masukan.split("\s")[0];
+                    System.out.println(instrMap.get(cmd).toMachineCode(masukan));
                 } else {
                     System.out.println("keluar dari program...");
                     break;
@@ -70,7 +71,7 @@ public class App {
             if (args.length == 0){
                 return new Syntax0Args(syntax, extractOpCode(text));
             } else if (args.length == 1){
-                return new Syntax1Args(syntax, extractOpCode(text));
+                return new Syntax1Args(syntax, extractOpCode(text), Argument.getArgument(args[0]));
             } else if (args.length == 2) {
                 return new Syntax2Args(syntax, extractOpCode(text));
             }

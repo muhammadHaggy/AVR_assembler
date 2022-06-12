@@ -1,11 +1,11 @@
 package pdf;
 
 abstract class Syntax {
-    String syntax, opcode;
+    String syntax, opCode;
     
     public Syntax(String syntax, String opcode) {
         this.syntax = syntax;
-        this.opcode = opcode;
+        this.opCode = opcode;
     }
 
     String getSyntax() {
@@ -13,13 +13,13 @@ abstract class Syntax {
     }
 
     String getOpcode() {
-        return opcode;
+        return opCode;
     }
 
     abstract String toMachineCode(String instr);
 
     @Override
     public String toString() {
-        return "Syntax: " + syntax + "\t\t\t" + "Opcode: " + opcode;
+        return "Syntax: " + syntax + "\t\t\t" + "Opcode: " + opCode;
     }
 }

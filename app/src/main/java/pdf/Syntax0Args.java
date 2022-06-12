@@ -8,7 +8,7 @@ public class Syntax0Args extends Syntax{
 
     @Override
     String toMachineCode(String instr) {
-        return opcode;
+        return opCode;
     }
     
 }

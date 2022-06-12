@@ -10,7 +10,7 @@ abstract class Argument {
     String toMachineCode(String opCode, String value){
         int valueIndex = 0;
         StringBuffer stringBuffer = new StringBuffer();
-        for (Character character : opCode.toCharArray()) {
+        for (Character character : opCode.toLowerCase().toCharArray()) {
             if (character == charInOpcode){
                 stringBuffer.append(value.charAt(valueIndex));
                 valueIndex++;
@@ -19,6 +19,17 @@ abstract class Argument {
             }
         }
         return stringBuffer.toString();
+    }
+
+    static Argument getArgument(String arg){
+        if (arg.toUpperCase().equals("K")){
+            return new K();
+        } else if (arg.toUpperCase().equals("RD")){
+            return new Rd();
+        } else if (arg.toUpperCase().equals("RR")){
+            return new Rr();
+        }
+        return null;
     }
 }
 
