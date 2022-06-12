@@ -19,6 +19,10 @@ abstract class Argument {
             value = "0" + value;
         }
 
+        while (value.length() > valueLength) {
+            value = value.substring(1);
+        }
+
 
         int valueIndex = 0;
         StringBuffer stringBuffer = new StringBuffer();
@@ -58,7 +62,13 @@ class Rd extends Argument{
 
     @Override
     String argToOpcode(String arg) {
-        // TODO Auto-generated method stub
+        try {
+            int registerNumber = Integer.parseInt(arg.substring(1));
+            String argOpcode = Integer.toBinaryString(registerNumber);
+            return argOpcode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -76,7 +86,13 @@ class Rr extends Argument{
 
     @Override
     String argToOpcode(String arg) {
-        // TODO Auto-generated method stub
+        try {
+            int registerNumber = Integer.parseInt(arg.substring(1));
+            String argOpcode = Integer.toBinaryString(registerNumber);
+            return argOpcode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
     
