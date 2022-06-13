@@ -23,10 +23,6 @@ public class App {
     private static Map<String, Instruction> instrMap = new HashMap<String, Instruction>();
     private static Scanner scanner = new Scanner(System.in);
 
-    public String getGreeting() {
-        return "Hello World!";
-    }
-
     public static void main(String[] args) {
         try {
             pdDocument = PDDocument.load(new File("app/src/main/resources/atmel-0856-avr-instruction-set-manual.pdf"));
