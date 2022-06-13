@@ -122,6 +122,9 @@ public class App {
         for (var entry : pageNumberMap.entrySet()) {
             pdfStripper.setStartPage(entry.getValue());
             pdfStripper.setEndPage(entry.getValue());
+            if (!pageNumberMap.values().contains(entry.getValue() + 1)){
+                pdfStripper.setEndPage(entry.getValue() + 1);
+            }
             String text = pdfStripper.getText(pdDocument);
             var syntaxList = extractSyntax(text, entry.getKey());
             var newInstr = new Instruction(extractDescription(text));

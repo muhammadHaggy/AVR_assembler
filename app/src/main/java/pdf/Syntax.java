@@ -20,6 +20,6 @@ abstract class Syntax {
 
     @Override
     public String toString() {
-        return "Syntax: " + syntax + "\t\t\t" + "Opcode: " + opCode;
+        return "Syntax: " + String.format("%-20s", syntax) + "Opcode: " + opCode;
     }
 }
